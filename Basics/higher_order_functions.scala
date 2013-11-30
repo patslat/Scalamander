@@ -1,4 +1,4 @@
-object Curry {
+object HigherOrderFunctions {
 
   def sumInts(start: Int, stop: Int): Int =
     if (start > stop) 0 else start + sumInts(start + 1, stop)
