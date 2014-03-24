@@ -1,3 +1,0 @@
-def square(x: Double) = x * x
-def square(x: Double = x * x
-def
