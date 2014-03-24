@@ -3,3 +3,19 @@ compile
 run
 exit
 console
+exit
+compile
+test
+sbt update
+update
+~test
+compile
+test
+compile
+test
+compile
+test
+~test
+compile
+test
+exit
