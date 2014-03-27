@@ -19,3 +19,5 @@ test
 compile
 test
 exit
+t
+exit
