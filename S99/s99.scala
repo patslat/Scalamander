@@ -14,6 +14,8 @@ object Main {
     println("P07a) This should be List(1, 2, 3, 4, 5, 6, 7, 8, 9): " + flatten(List(List(1, List(2, List(3))), List(4), 5, 6, List(List(List(7), List(8), List(9))))))
     println("P07b) This should be List(1, 2, 3, 4, 5, 6, 7, 8, 9): " + flattenEZ(List(List(1, List(2, List(3))), List(4), 5, 6, List(List(List(7), List(8), List(9))))))
     println("P08) This should be List('a, 'b, 'c, 'a, 'd, 'e): " + compress(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
+    println("P09) This should be List(List('a, 'a, 'a, 'a), List('b), List('c, 'c), List('a, 'a), List('d), List('e, 'e, 'e, 'e)): \n      " + pack(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
+    println("P10) This should be List((4, 'a), (1, 'b), (2, 'c), (2, 'a), (1, 'd), (4, 'e)):\n      " + encode(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
   }
 
   // P01
@@ -70,5 +72,17 @@ object Main {
   def compress(ls: List[Any]): List[Any] = ls.foldRight(List[Any]()) { (item, uniques) =>
     if (uniques.isEmpty || uniques.head != item) item :: uniques
     else uniques
+  }
+
+  // P09
+  def pack(ls: List[Any]): List[List[Any]] = ls.foldRight(List[List[Any]]()) { (item, packed) =>
+    if (packed.isEmpty || packed.head.head != item) List(item) :: packed
+    else (item :: packed.head) :: packed.tail
+  }
+
+  // P10
+  def encode(ls: List[Any]): List[(Int, Any)] = ls.foldRight(List[(Int, Any)]()) { (item, encoded) =>
+    if (encoded.isEmpty || encoded.head._2 != item) (1, item) :: encoded
+    else (encoded.head._1 + 1, item) :: encoded.tail
   }
 }
