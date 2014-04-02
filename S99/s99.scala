@@ -16,6 +16,8 @@ object Main {
     println("P08) This should be List('a, 'b, 'c, 'a, 'd, 'e): " + compress(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
     println("P09) This should be List(List('a, 'a, 'a, 'a), List('b), List('c, 'c), List('a, 'a), List('d), List('e, 'e, 'e, 'e)): \n      " + pack(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
     println("P10) This should be List((4, 'a), (1, 'b), (2, 'c), (2, 'a), (1, 'd), (4, 'e)):\n      " + encode(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
+    println("P11) This should be List((4,'a), 'b, (2,'c), (2,'a), 'd, (4,'e)): \n      " + encodeModified(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
+    println("P12) This should be List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e): \n      " + decode(List((4, 'a), (1, 'b), (2, 'c), (2, 'a), (1, 'd), (4, 'e))))
   }
 
   // P01
@@ -63,26 +65,36 @@ object Main {
     case (h: List[_]) :: rest => flatten(h) ::: flatten(rest)
     case h :: rest            => List(h) ::: flatten(rest)
   }
-  def flattenEZ(ls: List[Any]): List[Any] = ls flatMap {
+  def flattenEZ[A](ls: List[Any]): List[Any] = ls flatMap {
     case nestedList: List[_] => flatten(nestedList)
     case h                   => List(h)
   }
 
   // P08
-  def compress(ls: List[Any]): List[Any] = ls.foldRight(List[Any]()) { (item, uniques) =>
+  def compress[A](ls: List[Any]): List[Any] = ls.foldRight(List[Any]()) { (item, uniques) =>
     if (uniques.isEmpty || uniques.head != item) item :: uniques
     else uniques
   }
 
   // P09
-  def pack(ls: List[Any]): List[List[Any]] = ls.foldRight(List[List[Any]]()) { (item, packed) =>
+  def pack[A](ls: List[Any]): List[List[Any]] = ls.foldRight(List[List[Any]]()) { (item, packed) =>
     if (packed.isEmpty || packed.head.head != item) List(item) :: packed
     else (item :: packed.head) :: packed.tail
   }
 
   // P10
-  def encode(ls: List[Any]): List[(Int, Any)] = ls.foldRight(List[(Int, Any)]()) { (item, encoded) =>
+  def encode[A](ls: List[Any]): List[(Int, Any)] = ls.foldRight(List[(Int, Any)]()) { (item, encoded) =>
     if (encoded.isEmpty || encoded.head._2 != item) (1, item) :: encoded
     else (encoded.head._1 + 1, item) :: encoded.tail
+  }
+
+  // P11
+  def encodeModified[A](ls: List[Any]): List[Any] = encode(ls) map { (tup) =>
+    if (tup._1 == 1) tup._2 else tup
+  }
+
+  // P12
+  def decode[A](ls: List[(Int, A)]): List[Any] = ls.foldRight(List[Any]()) { (tup, decoded) =>
+    Range(0, tup._1).foldRight(List[Any]()) { (_, sublist) => tup._2 :: sublist } ::: decoded
   }
 }
